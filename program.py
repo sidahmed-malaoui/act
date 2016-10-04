@@ -9,8 +9,17 @@ def copy(time, verbose):
     while True:
         iowait = psutil.cpu_times_percent(interval=time).iowait
         if verbose:
-            print("Usage of the iowait {}%".format(iowait))
+            print("Usage of the iowait : {}%".format(iowait))
         if iowait < 2:
+            os.system("poweroff")
+
+
+def cpu(time, verbose):
+    while True:
+        cpu_usage = psutil.cpu_times_percent(time).nice
+        if verbose:
+            print("Usage of the cpu : {}%".format(cpu_usage))
+        if cpu_usage < 2:
             os.system("poweroff")
 
 
@@ -31,6 +40,8 @@ def main():
     
     if args.operation == 'copy':
         copy(args.time, args.verbose)
+    elif args.operation =='cpu':
+        cpu(args.time, args.verbose)
 
 
 
