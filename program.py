@@ -3,6 +3,7 @@
 import psutil
 import os
 import argparse
+from time import sleep
 
 
 def copy(time, verbose):
@@ -20,6 +21,28 @@ def cpu(time, verbose):
         if verbose:
             print("Usage of the cpu : {}%".format(cpu_usage))
         if cpu_usage < 2:
+            os.system("poweroff")
+
+
+def download(time, verbose):
+    while True:
+        bytes_recv = psutil.net_io_counters().bytes_recv / 1000
+        sleep(time)
+        speed = (psutil.net_io_counters().bytes_recv/1000 - bytes_recv)/time
+        if verbose:
+            print("Download speed : {:.1f} KB/sec".format(speed))
+        if speed < 3:
+            os.system("poweroff")
+
+
+def upload(time, verbose):
+    while True:
+        bytes_sent = psutil.net_io_counters().bytes_sent / 1000
+        sleep(time)
+        speed = (psutil.net_io_counters().bytes_sent/1000 - bytes_sent)/time
+        if verbose:
+            print("Download speed : {:.1f} KB/sec".format(speed))
+        if speed < 3:
             os.system("poweroff")
 
 
@@ -42,7 +65,10 @@ def main():
         copy(args.time, args.verbose)
     elif args.operation =='cpu':
         cpu(args.time, args.verbose)
-
+    elif args.operation == 'download':
+        download(args.time, args.verbose)
+    elif args.operation == 'upload':
+        upload(args.time, args.verbose)
 
 
 if __name__ == '__main__':
