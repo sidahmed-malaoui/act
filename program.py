@@ -68,7 +68,7 @@ def main():
     
     # Need to be root to execute this script.
     if os.getuid() != 0 and args.action in ['poweroff', 'reboot', 'hibernate']:
-        print("need to be root for this action")
+        print("need to be root to {}".format(args.action))
         exit(-1)
     
     # Waiting for the asked operation.
