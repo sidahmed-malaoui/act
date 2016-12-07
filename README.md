@@ -3,7 +3,7 @@
 ```
 git clone https://github.com/sidahmed-malaoui/action_after_operation
 
-sudo mv action_after_operation/act.py /usr/local/bin/act
+sudo mv act/act.py /usr/local/bin/act
 ```
 
 # Usage
