@@ -1,18 +1,35 @@
 #!/usr/bin/python3
 
-import psutil
 import os
+try:
+    import psutil
+except ImportError:
+    import pip
+    print("Installing missing packages (this will be done the first time only) :")
+    if os.getuid() == 0:
+        pip.main(["install", "psutil"])
+    else:
+        pip.main(["install", "psutil", "--user"])
+    print("Done.\nRerun the command now.")
+    exit(0)
 import argparse
-from time import sleep
+from time import sleep, localtime
 
 
 # This function will execute until the end of the copy
 def copy(time, verbose):
     while True:
-        iowait = psutil.cpu_times_percent(interval=time).iowait
+        bytes_read = psutil.disk_io_counters().read_bytes / (1024*1024)
+        bytes_wrote = psutil.disk_io_counters().write_bytes / (1024*1024)
+        sleep(time)
+        bytes_read = (psutil.disk_io_counters().read_bytes / (1024*1024) - bytes_read) / time
+        bytes_wrote = (psutil.disk_io_counters().write_bytes / (1024*1024) - bytes_wrote) / time
+
         if verbose:
-            print("Usage of the iowait : {}%".format(iowait))
-        if iowait < 2:
+            t = localtime()
+            print("[{}:{}:{}] R : {:.2f} Mb / W : {:.2f} Mb".format(
+                t.tm_hour, t.tm_min, t.tm_sec, bytes_read, bytes_wrote))
+        if bytes_read < 0.1 and bytes_wrote < 0.1:
             return
 
 
@@ -21,7 +38,8 @@ def cpu(time, verbose):
     while True:
         cpu_usage = psutil.cpu_times_percent(time).nice
         if verbose:
-            print("Usage of the cpu : {}%".format(cpu_usage))
+            t = localtime()
+            print("[{}:{}:{}] cpu usage : {}%".format(t.tm_hour, t.tm_min, t.tm_sec, cpu_usage))
         if cpu_usage < 2:
             return
 
@@ -33,7 +51,9 @@ def download(time, verbose):
         sleep(time)
         speed = (psutil.net_io_counters().bytes_recv/1000 - bytes_recv)/time
         if verbose:
-            print("Download speed : {:.1f} KB/sec".format(speed))
+            t = localtime()
+            print("[{}:{}:{}] Download speed : {:.1f} KB/sec".format(
+                t.tm_hour, t.tm_min, t.tm_sec, speed))
         if speed < 3:
             return
 
@@ -45,7 +65,8 @@ def upload(time, verbose):
         sleep(time)
         speed = (psutil.net_io_counters().bytes_sent/1000 - bytes_sent)/time
         if verbose:
-            print("Download speed : {:.1f} KB/sec".format(speed))
+            t = localtime()
+            print("[{}:{}:{}] Upload speed : {:.1f} KB/sec".format(t.tm_hour, t.tm_min, t.tm_sec, speed))
         if speed < 3:
             return
 
