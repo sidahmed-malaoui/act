@@ -1,10 +1,7 @@
 # Installation
+For Debian based distros (like Ubuntu), you can download the .deb package from here https://github.com/sidahmed-malaoui/act/releases, and install it with :
 
-```
-git clone https://github.com/sidahmed-malaoui/action_after_operation
-
-sudo mv act/act.py /usr/local/bin/act
-```
+```dpkg -i act_i386_amd64.deb```
 
 # Usage
 ```act -o operation_to_wait_for -a action_to_perform -v```

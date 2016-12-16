@@ -73,7 +73,7 @@ def upload(time, verbose):
 
 def main():
 
-    args_parser = argparse.ArgumentParser()
+    args_parser = argparse.ArgumentParser(description="This program is used to perform an operation after an action.")
 
     # Adding the available arguments with the ArgumentParser() object.
     args_parser.add_argument('-o', '--operation', type=str, required=True, choices=['cpu', 'copy', 'download', 'upload'],
