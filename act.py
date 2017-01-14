@@ -27,7 +27,7 @@ def copy(time, verbose):
 
         if verbose:
             t = localtime()
-            print("[{}:{}:{}] R : {:.2f} Mb / W : {:.2f} Mb".format(
+            print("[{:02}:{:02}:{:02}] R : {:.2f} Mb / W : {:.2f} Mb".format(
                 t.tm_hour, t.tm_min, t.tm_sec, bytes_read, bytes_wrote))
         if bytes_read < 0.1 and bytes_wrote < 0.1:
             return
@@ -39,7 +39,7 @@ def cpu(time, verbose):
         cpu_usage = psutil.cpu_times_percent(time).nice
         if verbose:
             t = localtime()
-            print("[{}:{}:{}] cpu usage : {}%".format(t.tm_hour, t.tm_min, t.tm_sec, cpu_usage))
+            print("[{:02}:{:02}:{:02}] cpu usage : {}%".format(t.tm_hour, t.tm_min, t.tm_sec, cpu_usage))
         if cpu_usage < 2:
             return
 
@@ -52,7 +52,7 @@ def download(time, verbose):
         speed = (psutil.net_io_counters().bytes_recv/1000 - bytes_recv)/time
         if verbose:
             t = localtime()
-            print("[{}:{}:{}] Download speed : {:.1f} KB/sec".format(
+            print("[{:02}:{:02}:{:02}] Download speed : {:.1f} KB/sec".format(
                 t.tm_hour, t.tm_min, t.tm_sec, speed))
         if speed < 3:
             return
@@ -66,7 +66,7 @@ def upload(time, verbose):
         speed = (psutil.net_io_counters().bytes_sent/1000 - bytes_sent)/time
         if verbose:
             t = localtime()
-            print("[{}:{}:{}] Upload speed : {:.1f} KB/sec".format(t.tm_hour, t.tm_min, t.tm_sec, speed))
+            print("[{:02}:{:02}:{:02}] Upload speed : {:.1f} KB/sec".format(t.tm_hour, t.tm_min, t.tm_sec, speed))
         if speed < 3:
             return
 
@@ -84,6 +84,7 @@ def main():
     args_parser.add_argument('-t', '--time', type=int, default=10, 
                             help='Interval to test if the operation is still running')
     args_parser.add_argument('-v', '--verbose', action='store_true', help='Verbose')
+    args_parser.add_argument('--version', action='version', version='%(prog)s 0.2')
 
     args = args_parser.parse_args()
     
