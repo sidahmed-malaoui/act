@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='act',
-    version='0.2',
+    version='0.3',
     description='Python Distribution Utilities',
     entry_points = {
         'console_scripts': [
