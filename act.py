@@ -36,7 +36,7 @@ def copy(time, verbose):
 # This function will execute until the end of the cpu usage.
 def cpu(time, verbose):
     while True:
-        cpu_usage = psutil.cpu_times_percent(time).nice
+        cpu_usage = psutil.cpu_percent(time)
         if verbose:
             t = localtime()
             print("[{:02}:{:02}:{:02}] cpu usage : {}%".format(t.tm_hour, t.tm_min, t.tm_sec, cpu_usage))
