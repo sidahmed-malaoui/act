@@ -14,6 +14,7 @@ except ImportError:
     exit(0)
 import argparse
 from time import sleep, localtime
+from distutils.spawn import find_executable
 
 
 # This function will execute until the end of the copy
@@ -71,6 +72,27 @@ def upload(time, verbose):
             return
 
 
+def action(action):
+    if find_executable('systemctl'):
+        if action == 'poweroff':
+            os.system('systemctl poweroff')
+        elif action == 'reboot':
+            os.system('systemctl reboot')
+        elif action == 'hibernate':
+            os.system('systemctl hibernate')
+        elif action == 'nothing':
+            pass
+    else:
+        if action == 'poweroff':
+            os.system('poweroff')
+        elif action == 'reboot':
+            os.system('reboot')
+        elif action == 'hibernate':
+            os.system('pm-hibernate')
+        elif action == 'nothing':
+            pass
+
+
 def main():
 
     args_parser = argparse.ArgumentParser(description="This program is used to perform an operation after an action.")
@@ -88,8 +110,13 @@ def main():
 
     args = args_parser.parse_args()
     
-    # Need to be root to execute this script.
-    if os.getuid() != 0 and args.action in ['poweroff', 'reboot', 'hibernate']:
+    # Find out which privilage this script needs to continue running.
+    if os.getuid() == 0 and find_executable('poweroff')[:5] == '/snap':
+        print("This script can't run using root privilages.")
+        print("Try to run it without sudo.")
+        exit(-1)
+    elif (os.getuid() != 0 and os.path.realpath('/sbin/poweroff') != '/bin/systemctl' 
+            and args.action in ['poweroff', 'reboot', 'hibernate']):
         print("need to be root to {}".format(args.action))
         exit(-1)
     
@@ -103,16 +130,7 @@ def main():
     elif args.operation == 'upload':
         upload(args.time, args.verbose)
 
-    # Executing the asked action.
-    if args.action == 'poweroff':
-        os.system('poweroff')
-    elif args.action == 'reboot':
-        os.system('reboot')
-    elif args.action == 'hibernate':
-        os.system('pm-hibernate')
-    elif args.action == 'nothing':
-        pass
-
+    action(args.action)
 
 if __name__ == '__main__':
     try:
