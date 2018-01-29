@@ -1,3 +1,6 @@
+# Note
+This program is not maintained for now, and it contains some bugs.
+
 # Installation
 For Debian based distros (like Ubuntu), you can download the .deb package from here https://github.com/sidahmed-malaoui/act/releases, and install it with :
 
